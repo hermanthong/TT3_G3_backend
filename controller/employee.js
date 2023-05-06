@@ -12,19 +12,19 @@ const getAllClaims = async (req, res) => {
         if (!employees) {
             return res
             .status(404)
-            .json({ message: employeeId+" does not exist" });
+            .json({ message:`Employee ${employeeId} does not exist` });
         }
         const projectExpenseClaims = await ProjectExpenseClaims.find({
             employeeId
         });
         if (!projectExpenseClaims) {
             res.status(200).json({
-                message: employeeId+" has no claims",
+                message: `Employee ${employeeId} has no claims`,
                 projectExpenseClaims: projectExpenseClaims,
             });
         } else {
             res.status(200).json({
-                message: employeeId+"'s claims returned",
+                message: `Employee ${employeeId}'s claims returned`,
                 projectExpenseClaims: projectExpenseClaims,
             });
         }
