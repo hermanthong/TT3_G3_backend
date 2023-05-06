@@ -31,7 +31,7 @@ const updateProjectExpenseClaims = async (req, res) => {
   try {
     const filter = req.body.claimId;
     const expense = await ProjectExpenseClaims.findOneAndUpdate(
-      { claimId: claimId },
+      { claimId: filter },
       req.body,
       {
         returnDocument: "after",

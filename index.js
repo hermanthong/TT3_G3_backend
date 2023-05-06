@@ -28,28 +28,12 @@ mongoose
     console.log(error);
   });
 
-const Currency = require("./models/currencyModel");
-
-app.post("/post", async (req, res) => {
-  try {
-    const currency = await Currency.create(req.body);
-    res.status(200).json({
-      message: "Currency created successfully",
-      currency: Currency,
-    });
-  } catch (error) {
-    console.log(error.message);
-    res.status(500).json({ message: error.message });
-  }
-});
-
+const claimRouter = require("./routes/claimRoutes");
+const employeeRouter = require("./routes/employeeRoutes")
 const authRouter = require("./routes/authRoute");
-// const Router = require("./routes/Route");
-// const Router = require("./routes/Route");
-// const Router = require("./routes/Route");
+
+app.use("/", claimRouter);
+app.use("/", employeeRouter);
 app.use("/auth", authRouter);
-// app.use("/api", Router);
-// app.use("/api", Router);
-// app.use("/api", Router);
 
 // module.exports = app;
