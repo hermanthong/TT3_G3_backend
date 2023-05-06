@@ -1,6 +1,50 @@
 const express = require("express");
 const mongoose = require("mongoose");
+const Employee = require("../models/employeeModel");
+const EmployeeProjects = require("../models/employeeProjectModel");
 const ProjectExpenseClaims = require("../models/projectExpenseClaimModel");
+const { v4: uuidv4 } = require("uuid");
+
+
+const postProjectExpenseClaims = async (req, res) => {
+  try {
+    const { firstName, lastName, currencyId, expenseDate, amount, purpose } = req.body;
+
+    // Find EmployeeID based on firstName and lastName
+    const employee = await Employee.findOne({ firstName, lastName });
+    if (!employee) {
+      return res.status(404).json({ message: "Cannot find employee with the given name" });
+    }
+    const employeeId = employee.employeeId;
+
+    // Find ProjectID based on EmployeeID
+    const employeeProject = await EmployeeProjects.findOne({ employeeId });
+    if (!employeeProject) {
+      return res.status(404).json({ message: `Cannot find employee project for the given employee ID ${employeeId}` });
+    }
+    const projectId = employeeProject.projectId;
+    const status = "pending"
+    const claimId = uuidv4();
+
+    // Create and save the project expense claim
+    const projectExpenseClaim = new ProjectExpenseClaims({
+      claimId,
+      projectId,
+      employeeId,
+      currencyId,
+      expenseDate,
+      amount,
+      purpose,
+      status
+    });
+    const savedProjectExpenseClaim = await projectExpenseClaim.save();
+
+    res.status(201).json({ message: "Project expense claim created", projectExpenseClaim: savedProjectExpenseClaim });
+  } catch (error) {
+    console.log(error.message);
+    res.status(500).json({ message: error.message });
+  }
+};
 
 // Delete project expense claims
 
@@ -56,4 +100,5 @@ const updateProjectExpenseClaims = async (req, res) => {
 module.exports = {
   updateProjectExpenseClaims,
   deleteProjectExpenseClaims,
+  postProjectExpenseClaims
 };
