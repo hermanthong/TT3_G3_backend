@@ -33,7 +33,6 @@ const projectexpenseclaimsSchema = mongoose.Schema(
     chargeToDefaultDept: {
       type: Boolean,
       default: false,
-      required: [true],
     },
     alternativeDeptCode: {
       type: String,
@@ -44,7 +43,6 @@ const projectexpenseclaimsSchema = mongoose.Schema(
     },
     lastEditedClaimDate: {
       type: String,
-      required: [true],
     },
   },
   {

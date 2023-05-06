@@ -1,6 +1,7 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
+const bodyParser = require('body-parser')
 const corsOptions = {
   origin: "*",
   credentials: true, //access-control-allow-credentials:true
@@ -10,6 +11,7 @@ const app = express();
 
 app.use(express.json());
 app.use(cors(corsOptions));
+app.use(bodyParser.urlencoded({ extended: false }));
 
 mongoose
   .connect(
@@ -26,13 +28,12 @@ mongoose
     console.log(error);
   });
 
-// const Router = require("./routes/Route");
 const claimRouter = require("./routes/claimRoutes");
-// const Router = require("./routes/Route");
-// const Router = require("./routes/Route");
-// app.use("/auth", Router);
+const employeeRouter = require("./routes/employeeRoutes")
+const authRouter = require("./routes/authRoute");
+
 app.use("/", claimRouter);
-// app.use("/api", Router);
-// app.use("/api", Router);
+app.use("/", employeeRouter);
+app.use("/auth", authRouter);
 
 // module.exports = app;
