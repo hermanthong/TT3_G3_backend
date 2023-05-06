@@ -43,13 +43,8 @@ const login = asyncHandler(async (req, res) => {
 });
 
 const verify_credentials = (accessToken, emp_id) => {
-  try {
-    const decoded = jwt.verify(accessToken, "super_secret_access_key");
-    return decoded.employeeId === emp_id;
-  }
-  catch (error) {
-    return false;
-  }
+  const decoded = jwt.verify(accessToken, "super_secret_access_key");
+  return decoded.employeeId === emp_id;
 };
 
 /*
