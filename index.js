@@ -29,11 +29,13 @@ mongoose
   });
 
 const claimRouter = require("./routes/claimRoutes");
-const employeeRouter = require("./routes/employeeRoutes")
+const employeeRouter = require("./routes/employeeRoutes");
 const authRouter = require("./routes/authRoute");
+const currencyRouter = require("./routes/currencyRoute");
 
 app.use("/", claimRouter);
 app.use("/", employeeRouter);
 app.use("/auth", authRouter);
+app.use('/currencies', currencyRouter);
 
 // module.exports = app;

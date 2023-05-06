@@ -27,4 +27,4 @@ async function connect_to_db() {
 
 // test login
 console.log('calling login()...');
-const obj = auth.login({body: {emp_id: 10001, password: 'Snga@123'}});
+const obj = auth.login({body: {emp_id: 10001, password: 'Singa@123'}});
