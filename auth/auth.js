@@ -1,58 +1,45 @@
 const Employees = require("../models/employeeModel");
-const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const asyncHandler = require("express-async-handler");
-const mongoose = require("mongoose");
 
 // @desc Login
 // @route POST /auth
 // @access Public
 const login = asyncHandler(async (req, res) => {
-  const { username, password } = req.body;
+  const { emp_id, password } = req.body;
 
-  if (!username || !password) {
-    return res.status(400).json({ message: "All fields are required user" });
+  // check if required fields are present
+  if (!emp_id) {
+    return res.status(400).json({ message: 'Request body is missing the "emp_id" field.' });
+  }
+  if (!password) {
+    return res.status(400).json({ message: 'Request body is missing the "password" field.'});
   }
 
-  const foundUser = await Employees.findOne({ username: username });
-
-  if (foundUser == null) {
-    return res.status(401).json({ message: "Unauthorized" });
+  // query mongodb
+  const employee = await Employees.findOne({ employeeId: emp_id });
+  if (employee == null) {
+    return res.status(401).json({ message: `No employee with id ${emp_id}.` });
   }
 
-  const match = await bcrypt.compare(password, foundUser.password);
+  // check if emp_id + password combination is valid
+  const match = password === employee.password;
+  if (!match) return res.status(401).json({ message: 'Password is incorrect.' });
 
-  if (!match) return res.status(401).json({ message: "Unauthorized" });
-
+  // all checks ok; sign a jwt access token and return
   const accessToken = jwt.sign(
     {
-      UserInfo: {
-        userId: foundUser.userId,
-        username: foundUser.username,
-        firstName: foundUser.firstName,
-        lastName: foundUser.lastName,
-        email: foundUser.email,
-        address: foundUser.address,
-        optIntoPhyStatements: foundUser.optIntoPhyStatements,
-      },
+      employeeId: employee.employeeId,
+      supervisorId: employee.supervisorId,
+      departmentCode: employee.departmentCode,
+      password: employee.password,
+      firstName: employee.firstName,
+      lastName: employee.lastName,
+      bankAccountNumber: employee.bankAccountNumber,
     },
-    process.env.ACCESS_TOKEN_SECRET,
+    "super_secret_access_key",
     { expiresIn: "15m" }
   );
-
-  const refreshToken = jwt.sign(
-    { username: foundUser.username },
-    process.env.REFRESH_TOKEN_SECRET,
-    { expiresIn: "7d" }
-  );
-
-  // Create secure cookie with refresh token
-  res.cookie("jwt", refreshToken, {
-    httpOnly: true, //accessible only by web server
-    secure: true, //https
-    sameSite: "None", //cross-site cookie
-    maxAge: 7 * 24 * 60 * 60 * 1000, //cookie expiry: set to match rT
-  });
 
   // Send accessToken containing username and information
   res.json({ accessToken });
