@@ -18,14 +18,16 @@ const getAllClaims = async (req, res) => {
             employeeId
         });
         if (!projectExpenseClaims) {
-            return res
-            .status(404)
-            .json({ message: employeeId+" has no claims" });
+            res.status(200).json({
+                message: employeeId+" has no claims",
+                projectExpenseClaims: projectExpenseClaims,
+            });
+        } else {
+            res.status(200).json({
+                message: employeeId+"'s claims returned",
+                projectExpenseClaims: projectExpenseClaims,
+            });
         }
-        res.status(200).json({
-            message: employeeId+"'s claims returned",
-            projectExpenseClaims: projectExpenseClaims,
-        });
     } catch (error) {
         console.log(error.message);
         res.status(500).json({ message: error.message });
