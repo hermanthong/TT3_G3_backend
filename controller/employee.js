@@ -2,10 +2,16 @@ const express = require("express");
 const mongoose = require("mongoose");
 const Employees = require("../models/employeeModel");
 const ProjectExpenseClaims = require("../models/projectExpenseClaimModel");
+const Auth = require("../auth/auth");
 
 const getAllClaims = async (req, res) => {
     try {
         const {employeeId} = req.params;
+        accessToken = req.body.accessToken
+        if(!Auth.verify_credentials(accessToken, employeeId)) {
+            return res.status(401).json({ message: "Unauthorized" });
+        }
+        
         const employees = await Employees.find({
             employeeId
         });
