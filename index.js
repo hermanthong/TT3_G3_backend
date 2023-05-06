@@ -26,13 +26,11 @@ mongoose
     console.log(error);
   });
 
-// const Router = require("./routes/Route");
+
 const claimRouter = require("./routes/claimRoutes");
-// const Router = require("./routes/Route");
-// const Router = require("./routes/Route");
-// app.use("/auth", Router);
+const employeeRouter = require("./routes/employeeRoutes")
+
 app.use("/", claimRouter);
-// app.use("/api", Router);
-// app.use("/api", Router);
+app.use("/", employeeRouter);
 
 // module.exports = app;
