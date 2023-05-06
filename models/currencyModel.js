@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const departmentSchema = mongoose.Schema(
+const currencySchema = mongoose.Schema(
   {
     currencyId: {
       type: String,
@@ -16,6 +16,6 @@ const departmentSchema = mongoose.Schema(
   }
 );
 
-const Department = mongoose.model("Department", departmentSchema);
+const Currency = mongoose.model("Currency", currencySchema);
 
-module.exports = Department;
+module.exports = Currency;
